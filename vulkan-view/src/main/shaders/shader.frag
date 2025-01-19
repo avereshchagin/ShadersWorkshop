@@ -31,10 +31,13 @@ vec4 mainImage(vec2 fragCoord) {
     float d = (uv.x - center.x) * (uv.x - center.x) / (rx * rx) +
     (uv.y - center.y) * (uv.y - center.y) / (ry * ry);
 
+    vec4 u_BgColor = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 u_Color = vec4(1.0, 0.0, 0.0, 1.0);
+
     if (d < 0.9) {
-        return vec4(1.0, 1.0, 1.0, 1.0);
+        return mix(u_Color, u_BgColor, d);
     } else {
-        return vec4(0.0, 0.0, 0.0, 0.0);
+        return u_BgColor;
     }
 }
 

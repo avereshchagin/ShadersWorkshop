@@ -3,9 +3,9 @@
 #include <android/asset_manager_jni.h>
 #include <android/native_window_jni.h>
 
-#include "hellovk.h"
+#include "vulkan_app.h"
 
-static vkt::HelloVK app;
+static VulkanApp app;
 
 extern "C" {
 
@@ -30,7 +30,7 @@ Java_io_github_avereshchagin_vulkan_VulkanJniBridge_nativeShutdownVulkan(
         JNIEnv *env,
         jobject obj
 ) {
-
+    app.cleanup();
 }
 
 JNIEXPORT void JNICALL
@@ -52,3 +52,4 @@ Java_io_github_avereshchagin_vulkan_VulkanJniBridge_nativeDraw(
     app.render();
 }
 }
+
