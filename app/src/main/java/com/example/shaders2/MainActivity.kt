@@ -32,6 +32,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.shaders2.agsl.AgslShaderImage
 import com.example.shaders2.gl.AnimationView
 import com.example.shaders2.ui.theme.Shaders2Theme
+import io.github.avereshchagin.vulkan.VulkanSurfaceView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +102,26 @@ fun Screen(modifier: Modifier = Modifier) {
             update = {
                 it.color = color
                 it.bgColor = bgColor
+            }
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            text = "Vulkan",
+        )
+
+        AndroidView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(3f),
+            factory = { context ->
+                VulkanSurfaceView(context)
+            },
+            update = {
             }
         )
 
