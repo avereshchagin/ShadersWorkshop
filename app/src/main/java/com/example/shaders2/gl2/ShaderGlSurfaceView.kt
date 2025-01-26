@@ -23,7 +23,7 @@ class ShaderGlSurfaceView(
 
     override fun setRenderer(renderer: Renderer) {
         super.setRenderer(renderer)
-        renderMode = GLTextureView.RENDERMODE_WHEN_DIRTY
+//        renderMode = GLTextureView.RENDERMODE_WHEN_DIRTY
     }
 
     override fun onResume() {

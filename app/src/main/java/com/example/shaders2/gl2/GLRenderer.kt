@@ -3,17 +3,27 @@ package com.example.shaders2.gl2
 import android.content.res.AssetManager
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.os.SystemClock
+import android.util.Log
 import android.util.Size
+import androidx.compose.ui.graphics.Color
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class GLRenderer(private val assets: AssetManager) : GLSurfaceView.Renderer {
+class GLRenderer(
+    private val assets: AssetManager,
+    private val pathToFrag: String,
+) : GLSurfaceView.Renderer {
 
     private var viewportSize = Size(0,0)
 
-    private var positionAttributeLocation: Int = 0
+    private var positionAttribute: Int = 0
+    private var resolutionUniform: Int = 0
+    private var timeUniform: Int = 0
+
+    private val startTimeMs = SystemClock.elapsedRealtime()
 
     private val quadVertices by lazy {
         floatArrayOf(
@@ -35,6 +45,10 @@ class GLRenderer(private val assets: AssetManager) : GLSurfaceView.Renderer {
     @Volatile
     private lateinit var shader: GLShaderProgram
 
+    fun setValue(name: String, color: Color) {
+
+    }
+
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
         GLES20.glClearColor(0f, 0f, 0f, 1f)
         GLES20.glDisable(GL10.GL_DITHER)
@@ -47,11 +61,13 @@ class GLRenderer(private val assets: AssetManager) : GLSurfaceView.Renderer {
             "mandelbrot_gl.frag",
         )
 
-        positionAttributeLocation = GLES20.glGetAttribLocation(shader.programId, "aPosition")
+        positionAttribute = GLES20.glGetAttribLocation(shader.programId, "aPosition")
+        resolutionUniform = GLES20.glGetUniformLocation(shader.programId, "iResolution")
+        timeUniform = GLES20.glGetUniformLocation(shader.programId, "iTime")
 
         verticesData.position(0)
         GLES20.glVertexAttribPointer(
-            positionAttributeLocation,
+            positionAttribute,
             positionComponentCount,
             GLES20.GL_FLOAT,
             false,
@@ -71,8 +87,16 @@ class GLRenderer(private val assets: AssetManager) : GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
         GLES20.glUseProgram(shader.programId)
-        GLES20.glEnableVertexAttribArray(positionAttributeLocation)
+
+        GLES20.glUniform2f(resolutionUniform, viewportSize.width.toFloat(), viewportSize.height.toFloat())
+
+        val timeDelta = (SystemClock.elapsedRealtime() - startTimeMs) / 1000.0f
+        GLES20.glUniform1f(timeUniform, timeDelta)
+
+//        Log.i("GL", "draw $timeDelta ${Thread.currentThread()}")
+
+        GLES20.glEnableVertexAttribArray(positionAttribute)
         GLES20.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4)
-        GLES20.glDisableVertexAttribArray(positionAttributeLocation)
+        GLES20.glDisableVertexAttribArray(positionAttribute)
     }
 }
