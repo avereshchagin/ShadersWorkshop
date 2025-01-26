@@ -153,11 +153,13 @@ void VulkanApp::reset(ANativeWindow *newWindow, AAssetManager *newManager) {
 
 void VulkanApp::resize(uint32_t width, uint32_t height) {
     if (initialized) {
-        VkExtent2D currentExtent;
-        currentExtent.width = width;
-        currentExtent.height = height;
-        LOGI("width %d, height %d", width, height);
-        displaySizeIdentity = currentExtent;
+        establishDisplaySizeIdentity();
+
+//        VkExtent2D currentExtent;
+//        currentExtent.width = width;
+//        currentExtent.height = height;
+//        LOGI("width %d, height %d", width, height);
+//        displaySizeIdentity = currentExtent;
 
         recreateSwapChain();
     }
@@ -172,6 +174,9 @@ void VulkanApp::recreateSwapChain() {
 }
 
 void VulkanApp::render() {
+    if (!initialized) {
+        return;
+    }
     if (orientationChanged) {
         onOrientationChange();
     }
@@ -245,15 +250,15 @@ void getPrerotationMatrix(const VkSurfaceCapabilitiesKHR &capabilities,
                           std::array<float, 16> &mat) {
     // mat is initialized to the identity matrix
     mat = {1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.};
-//  if (pretransformFlag & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR) {
-//    // mat is set to a 90 deg rotation matrix
-//    mat = {0., 1., 0., 0., -1., 0, 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.};
-//  }
-//
-//  else if (pretransformFlag & VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR) {
-//    // mat is set to 270 deg rotation matrix
-//    mat = {0., -1., 0., 0., 1., 0, 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.};
-//  }
+    if (pretransformFlag & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR) {
+        // mat is set to a 90 deg rotation matrix
+        mat = {0., 1., 0., 0., -1., 0, 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.};
+    }
+
+    else if (pretransformFlag & VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR) {
+        // mat is set to 270 deg rotation matrix
+        mat = {0., -1., 0., 0., 1., 0, 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.};
+    }
 }
 
 void VulkanApp::createDescriptorPool() {
@@ -317,8 +322,9 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     UniformBufferObject ubo{};
     getPrerotationMatrix(swapChainSupport.capabilities, pretransformFlag,
                          ubo.mvp);
-    ubo.width = displaySizeIdentity.width * 1.f;
-    ubo.height = displaySizeIdentity.height * 1.f;
+    ubo.size = {displaySizeIdentity.width * 1.f, displaySizeIdentity.height * 1.f};
+    ubo.color = color;
+    ubo.bgColor = bgColor;
     void *data;
     vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0,
                 &data);
@@ -692,12 +698,12 @@ void VulkanApp::establishDisplaySizeIdentity() {
     uint32_t height = capabilities.currentExtent.height;
     if (capabilities.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR ||
         capabilities.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR) {
-        // Swap to get identity width and height
+//         Swap to get identity width and height
         capabilities.currentExtent.height = width;
         capabilities.currentExtent.width = height;
     }
 
-    LOGI("width %d, height %d", width, height);
+    LOGI("width %d, height %d", capabilities.currentExtent.width, capabilities.currentExtent.height);
 
     displaySizeIdentity = capabilities.currentExtent;
 }
@@ -1067,4 +1073,12 @@ void VulkanApp::createSyncObjects() {
 
         VK_CHECK(vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]));
     }
+}
+
+void VulkanApp::setColor(float r, float g, float b) {
+    color = {r, g, b, 1.0f};
+}
+
+void VulkanApp::setBgColor(float r, float g, float b) {
+    bgColor = {r, g, b, 1.0f};
 }

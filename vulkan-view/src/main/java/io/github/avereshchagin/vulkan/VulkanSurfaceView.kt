@@ -31,9 +31,22 @@ open class VulkanSurfaceView @JvmOverloads constructor(
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         Log.i("Vulkan", "Surface destroyed")
+        bridge.nativeShutdownVulkan()
     }
 
     override fun surfaceRedrawNeeded(holder: SurfaceHolder) {
         bridge.nativeDraw()
+    }
+
+    fun redraw() {
+        bridge.nativeDraw()
+    }
+
+    fun setColor(red: Float, green: Float, blue: Float) {
+        bridge.setColor(red, green, blue)
+    }
+
+    fun setBgColor(red: Float, green: Float, blue: Float) {
+        bridge.setBgColor(red, green, blue)
     }
 }

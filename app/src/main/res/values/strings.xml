@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Shaders2</string>
+
+    <string name="nav_capabilities">Capabilities</string>
+    <string name="nav_allinone">All in one</string>
+    <string name="nav_opengl">Open GL</string>
+    <string name="nav_vulkan">Vulkan</string>
+    <string name="nav_agsl">AGSL</string>
 </resources>

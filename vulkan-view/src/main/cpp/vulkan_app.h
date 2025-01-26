@@ -54,8 +54,9 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 
 struct UniformBufferObject {
   std::array<float, 16> mvp;
-  float width;
-  float height;
+  std::array<float, 4> color;
+  std::array<float, 4> bgColor;
+  std::array<float, 2> size;
 };
 
 struct QueueFamilyIndices {
@@ -167,6 +168,8 @@ class VulkanApp {
   void cleanupSwapChain();
   void reset(ANativeWindow *newWindow, AAssetManager *newManager);
   void resize(uint32_t width, uint32_t height);
+  void setColor(float r, float g, float b);
+  void setBgColor(float r, float g, float b);
   bool initialized = false;
 
  private:
@@ -263,4 +266,7 @@ class VulkanApp {
   uint32_t currentFrame = 0;
   bool orientationChanged = false;
   VkSurfaceTransformFlagBitsKHR pretransformFlag;
+
+  std::array<float, 4> color = {1.f, 0.f, 0.f, 1.f};
+  std::array<float, 4> bgColor = {0.f, 0.f, 0.f, 0.f};
 };

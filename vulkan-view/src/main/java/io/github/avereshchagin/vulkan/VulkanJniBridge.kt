@@ -15,6 +15,10 @@ class VulkanJniBridge {
 
     external fun nativeDraw()
 
+    external fun setColor(r: Float, g: Float, b: Float)
+
+    external fun setBgColor(r: Float, g: Float, b: Float)
+
     companion object {
         init {
             System.loadLibrary("vulkan_view")

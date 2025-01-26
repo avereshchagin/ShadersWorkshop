@@ -22,7 +22,9 @@ Java_io_github_avereshchagin_vulkan_VulkanJniBridge_nativeInitVulkan(
 
     LOGI("init vulkan");
     app.reset(window, assetManager);
-    app.initVulkan();
+    if (!app.initialized) {
+        app.initVulkan();
+    }
 }
 
 JNIEXPORT void JNICALL
@@ -51,5 +53,26 @@ Java_io_github_avereshchagin_vulkan_VulkanJniBridge_nativeDraw(
     LOGI("render");
     app.render();
 }
+
+JNIEXPORT void JNICALL
+Java_io_github_avereshchagin_vulkan_VulkanJniBridge_setColor(
+        JNIEnv *env,
+        jobject obj,
+        jfloat r,
+        jfloat g,
+        jfloat b
+) {
+    app.setColor(r, g, b);
 }
 
+JNIEXPORT void JNICALL
+Java_io_github_avereshchagin_vulkan_VulkanJniBridge_setBgColor(
+        JNIEnv *env,
+        jobject obj,
+        jfloat r,
+        jfloat g,
+        jfloat b
+) {
+    app.setBgColor(r, g, b);
+}
+}

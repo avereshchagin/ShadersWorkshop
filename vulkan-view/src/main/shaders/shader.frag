@@ -8,6 +8,8 @@ layout(location = 0) out vec4 outColor;
 
 layout(binding = 0) uniform UniformBufferObject {
     mat4 MVP;
+    vec4 color;
+    vec4 bgColor;
     vec2 size;
 } ubo;
 
@@ -31,13 +33,10 @@ vec4 mainImage(vec2 fragCoord) {
     float d = (uv.x - center.x) * (uv.x - center.x) / (rx * rx) +
     (uv.y - center.y) * (uv.y - center.y) / (ry * ry);
 
-    vec4 u_BgColor = vec4(1.0, 1.0, 1.0, 1.0);
-    vec4 u_Color = vec4(1.0, 0.0, 0.0, 1.0);
-
     if (d < 0.9) {
-        return mix(u_Color, u_BgColor, d);
+        return mix(ubo.color, ubo.bgColor, d);
     } else {
-        return u_BgColor;
+        return ubo.bgColor;
     }
 }
 
