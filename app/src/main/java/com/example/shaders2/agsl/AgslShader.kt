@@ -2,6 +2,7 @@ package com.example.shaders2.agsl
 
 import android.graphics.RuntimeShader
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -54,7 +55,7 @@ internal fun AgslShaderImage(
         ShaderBrush(shader)
     }
 
-    Box(
+    Spacer(
         modifier = modifier
             .drawBehind {
                 shader.setFloatUniform("iResolution", size.width, size.height)

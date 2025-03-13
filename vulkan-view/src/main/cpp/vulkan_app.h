@@ -56,7 +56,8 @@ struct UniformBufferObject {
   std::array<float, 16> mvp;
   std::array<float, 4> color;
   std::array<float, 4> bgColor;
-  std::array<float, 2> size;
+  alignas(16) std::array<float, 2> size;
+  alignas(16) float a;
 };
 
 struct QueueFamilyIndices {

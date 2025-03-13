@@ -6,4 +6,6 @@
     <string name="nav_opengl">Open GL</string>
     <string name="nav_vulkan">Vulkan</string>
     <string name="nav_agsl">AGSL</string>
+    <string name="nav_render_effect">Render Effect</string>
+    <string name="nav_cpu">CPU</string>
 </resources>

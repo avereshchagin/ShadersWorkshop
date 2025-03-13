@@ -12,15 +12,20 @@ import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class GLRenderer(
+class GLRenderer2(
     private val assets: AssetManager,
     private val pathToFrag: String,
 ) : GLSurfaceView.Renderer {
+
+    var color: Color = Color.Black
+    var bgColor: Color = Color.Black
 
     private var viewportSize = Size(0,0)
 
     private var positionAttribute: Int = 0
     private var resolutionUniform: Int = 0
+    private var colorUniform: Int = 0
+    private var bgColorUniform: Int = 0
     private var timeUniform: Int = 0
 
     private val startTimeMs = SystemClock.elapsedRealtime()
@@ -45,10 +50,6 @@ class GLRenderer(
     @Volatile
     private lateinit var shader: GLShaderProgram
 
-    fun setValue(name: String, color: Color) {
-
-    }
-
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
         GLES20.glClearColor(0f, 0f, 0f, 1f)
         GLES20.glDisable(GL10.GL_DITHER)
@@ -58,11 +59,13 @@ class GLRenderer(
         shader = GLShaderProgram.createShaderProgram(
             assets,
             "mandelbrot_gl.vert",
-            "mandelbrot_gl.frag",
+            pathToFrag,
         )
 
         positionAttribute = GLES20.glGetAttribLocation(shader.programId, "aPosition")
         resolutionUniform = GLES20.glGetUniformLocation(shader.programId, "iResolution")
+        colorUniform = GLES20.glGetUniformLocation(shader.programId, "u_Color")
+        bgColorUniform = GLES20.glGetUniformLocation(shader.programId, "u_BgColor")
         timeUniform = GLES20.glGetUniformLocation(shader.programId, "iTime")
 
         verticesData.position(0)
@@ -91,6 +94,8 @@ class GLRenderer(
         GLES20.glUseProgram(shader.programId)
 
         GLES20.glUniform2f(resolutionUniform, viewportSize.width.toFloat(), viewportSize.height.toFloat())
+        GLES20.glUniform3f(colorUniform, color.red, color.green, color.blue)
+        GLES20.glUniform3f(bgColorUniform, bgColor.red, bgColor.green, bgColor.blue)
 
         val timeDelta = (SystemClock.elapsedRealtime() - startTimeMs) / 1000.0f
         GLES20.glUniform1f(timeUniform, timeDelta)

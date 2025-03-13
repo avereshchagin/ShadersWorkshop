@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,18 +49,22 @@ import com.example.shaders2.agsl.AgslShaderImage
 import com.example.shaders2.gl.AnimationView
 import com.example.shaders2.screens.AGSL
 import com.example.shaders2.screens.AllInOne
+import com.example.shaders2.screens.CPUGenerated
 import com.example.shaders2.screens.Capabilities
 import com.example.shaders2.screens.OpenGL
+import com.example.shaders2.screens.RenderEffectScreen
+import com.example.shaders2.screens.SurfaceTexture
 import com.example.shaders2.screens.Vulkan
 import com.example.shaders2.ui.theme.Shaders2Theme
-import io.github.avereshchagin.vulkan.VulkanSurfaceView
 
 private enum class NavRoute(val route: String, @StringRes val title: Int) {
-    Capabilities("capabilities", R.string.nav_capabilities),
-    AllInOne("all-in-one", R.string.nav_allinone),
     OpenGL("opengl", R.string.nav_opengl),
-    Vulkan("vulkan", R.string.nav_vulkan),
     AGSL("agsl", R.string.nav_agsl),
+    RenderEffect("render_effect", R.string.nav_render_effect),
+    CPU("CPU", R.string.nav_cpu),
+    AllInOne("all-in-one", R.string.nav_allinone),
+//    Capabilities("capabilities", R.string.nav_capabilities),
+//    Vulkan("vulkan", R.string.nav_vulkan),
 }
 
 class MainActivity : ComponentActivity() {
@@ -80,11 +85,13 @@ class MainActivity : ComponentActivity() {
                             onNavigateTo = { navController.navigate(it.route) },
                         )
                     }
-                    composable(NavRoute.Capabilities.route) { Capabilities() }
+//                    composable(NavRoute.Capabilities.route) { Capabilities() }
+                    composable(NavRoute.AGSL.route) { AGSL() }
+                    composable(NavRoute.RenderEffect.route) { RenderEffectScreen() }
+                    composable(NavRoute.CPU.route) { CPUGenerated() }
                     composable(NavRoute.AllInOne.route) { AllInOne() }
                     composable(NavRoute.OpenGL.route) { OpenGL() }
-                    composable(NavRoute.Vulkan.route) { Vulkan() }
-                    composable(NavRoute.AGSL.route) { AGSL() }
+//                    composable(NavRoute.Vulkan.route) { Vulkan() }
                 }
             }
         }
@@ -108,7 +115,12 @@ private fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(NavRoute.entries) {
-                    Button(onClick = { onNavigateTo(it) }) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp),
+                        onClick = { onNavigateTo(it) },
+                    ) {
                         Text(
                             text = stringResource(it.title),
                             style = MaterialTheme.typography.headlineLarge,

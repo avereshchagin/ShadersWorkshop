@@ -1,16 +1,27 @@
 package io.github.avereshchagin.vulkan
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 
 open class VulkanSurfaceView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0, defStyleRes: Int = 0
 ): SurfaceView(
     context, attrs, defStyle, defStyleRes
 ), SurfaceHolder.Callback2 {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val coroutineScope = CoroutineScope(Dispatchers.IO.limitedParallelism(1) + SupervisorJob())
 
     private val bridge = VulkanJniBridge()
 
@@ -31,11 +42,21 @@ open class VulkanSurfaceView @JvmOverloads constructor(
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         Log.i("Vulkan", "Surface destroyed")
+        coroutineScope.coroutineContext.cancelChildren()
         bridge.nativeShutdownVulkan()
     }
 
     override fun surfaceRedrawNeeded(holder: SurfaceHolder) {
         bridge.nativeDraw()
+    }
+
+    override fun surfaceRedrawNeededAsync(holder: SurfaceHolder, drawingFinished: Runnable) {
+        coroutineScope.launch {
+            val start = SystemClock.elapsedRealtime()
+            bridge.nativeDraw()
+            Log.i("Vulkan", "Draw time ${SystemClock.elapsedRealtime() - start} ms")
+            drawingFinished.run()
+        }
     }
 
     fun redraw() {

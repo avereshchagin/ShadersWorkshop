@@ -1,4 +1,6 @@
 uniform vec2 iResolution;
+uniform vec3 u_Color;
+uniform vec3 u_BgColor;
 
 float GLASS_REFRACTION = 0.125;
 
@@ -10,9 +12,6 @@ vec2 glass(vec2 uv) {
 }
 
 vec4 mainImage(vec2 fragCoord) {
-    vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
-    vec4 bgColor = vec4(1.0, 1.0, 1.0, 1.0);
-
     vec2 uv = fragCoord / iResolution;
     uv = glass(uv);
 
@@ -24,9 +23,9 @@ vec4 mainImage(vec2 fragCoord) {
     (uv.y - center.y) * (uv.y - center.y) / (ry * ry);
 
     if (d < 0.9) {
-        return mix(color, bgColor, d);
+        return vec4(mix(u_Color, u_BgColor, d), 1.0);
     } else {
-        return bgColor;
+        return vec4(u_BgColor, 1.0);
     }
 }
 
