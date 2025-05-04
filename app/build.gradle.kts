@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.shaders2"
-        minSdk = 33
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -65,8 +65,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.flipper)
-    implementation(libs.soloader)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

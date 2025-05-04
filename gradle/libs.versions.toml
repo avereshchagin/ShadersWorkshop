@@ -13,8 +13,6 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
 navigationCompose = "2.8.5"
-flipperVersion = "0.273.0"
-soLoaderVersion = "0.10.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,8 +34,6 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-flipper = { group = "com.facebook.flipper", name="flipper", version.ref = "flipperVersion"}
-soloader = { group = "com.facebook.soloader", name="soloader", version.ref = "soLoaderVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,37 +1,22 @@
-package com.example.shaders2.screens
+package com.example.shaders2.agsl
 
-import android.graphics.Color
 import android.graphics.RuntimeShader
-import android.os.Build
-import android.os.SystemClock
-import androidx.compose.animation.core.withInfiniteAnimationFrameMillis
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.stringResource
-import com.example.shaders2.R
-import com.example.shaders2.agsl.SpotCanvas
-import kotlinx.coroutines.delay
 import org.intellij.lang.annotations.Language
 
 @Language("AGSL")
@@ -70,29 +55,44 @@ private val agslShaderSrc = """
     }
 """.trimIndent()
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(33)
 @Composable
-fun AGSL() {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(R.string.nav_agsl))
+internal fun SpotCanvas(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+    ) {
+        val shader = remember {
+            RuntimeShader(agslShaderSrc)
+        }
+        val brush = remember(shader) {
+            ShaderBrush(shader)
+        }
+
+        var time by remember {
+            mutableFloatStateOf(0f)
+        }
+
+        LaunchedEffect(Unit) {
+            while (true) {
+                withFrameMillis {
+                    time = it / 1000f
                 }
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                SpotCanvas()
-            } else {
-                Text(stringResource(R.string.agsl_not_supported))
             }
+        }
+
+        val bgColor = MaterialTheme.colorScheme.background
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(2f),
+        ) {
+            shader.setFloatUniform("iResolution", size.width, size.height)
+            shader.setFloatUniform("iTime", time)
+            shader.setColorUniform("iBgColor", bgColor.toArgb())
+            drawRect(brush)
         }
     }
 }

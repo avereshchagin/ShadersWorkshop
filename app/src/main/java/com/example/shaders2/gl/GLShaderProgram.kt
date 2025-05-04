@@ -1,4 +1,4 @@
-package com.example.shaders2.gl2
+package com.example.shaders2.gl
 
 import android.content.res.AssetManager
 import android.opengl.GLES10

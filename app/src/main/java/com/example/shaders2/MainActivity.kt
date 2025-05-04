@@ -9,51 +9,30 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.shaders2.agsl.AgslShaderImage
-import com.example.shaders2.gl.AnimationView
 import com.example.shaders2.screens.AGSL
-import com.example.shaders2.screens.AllInOne
-import com.example.shaders2.screens.CPUGenerated
 import com.example.shaders2.screens.Capabilities
+import com.example.shaders2.screens.Mandelbrot
 import com.example.shaders2.screens.OpenGL
 import com.example.shaders2.screens.RenderEffectScreen
-import com.example.shaders2.screens.SurfaceTexture
 import com.example.shaders2.screens.Vulkan
 import com.example.shaders2.ui.theme.Shaders2Theme
 
@@ -61,10 +40,11 @@ private enum class NavRoute(val route: String, @StringRes val title: Int) {
     OpenGL("opengl", R.string.nav_opengl),
     AGSL("agsl", R.string.nav_agsl),
     RenderEffect("render_effect", R.string.nav_render_effect),
-    CPU("CPU", R.string.nav_cpu),
-    AllInOne("all-in-one", R.string.nav_allinone),
-//    Capabilities("capabilities", R.string.nav_capabilities),
-//    Vulkan("vulkan", R.string.nav_vulkan),
+    Mandelbrot("mandelbrot", R.string.nav_mandelbrot),
+//    CPU("CPU", R.string.nav_cpu),
+//    AllInOne("all-in-one", R.string.nav_allinone),
+    Capabilities("capabilities", R.string.nav_capabilities),
+    Vulkan("vulkan", R.string.nav_vulkan),
 }
 
 class MainActivity : ComponentActivity() {
@@ -85,13 +65,14 @@ class MainActivity : ComponentActivity() {
                             onNavigateTo = { navController.navigate(it.route) },
                         )
                     }
-//                    composable(NavRoute.Capabilities.route) { Capabilities() }
+                    composable(NavRoute.Capabilities.route) { Capabilities() }
                     composable(NavRoute.AGSL.route) { AGSL() }
                     composable(NavRoute.RenderEffect.route) { RenderEffectScreen() }
-                    composable(NavRoute.CPU.route) { CPUGenerated() }
-                    composable(NavRoute.AllInOne.route) { AllInOne() }
+//                    composable(NavRoute.CPU.route) { CPUGenerated() }
+//                    composable(NavRoute.AllInOne.route) { AllInOne() }
                     composable(NavRoute.OpenGL.route) { OpenGL() }
-//                    composable(NavRoute.Vulkan.route) { Vulkan() }
+                    composable(NavRoute.Mandelbrot.route) { Mandelbrot() }
+                    composable(NavRoute.Vulkan.route) { Vulkan() }
                 }
             }
         }

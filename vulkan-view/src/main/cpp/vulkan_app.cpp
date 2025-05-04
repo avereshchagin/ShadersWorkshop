@@ -639,6 +639,10 @@ void VulkanApp::pickPhysicalDevice() {
     vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
     for (const auto &device : devices) {
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(device, &properties);
+
+        LOGI("GPU: %s", properties.deviceName);
         if (isDeviceSuitable(device)) {
             physicalDevice = device;
             break;

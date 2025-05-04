@@ -1,70 +1,106 @@
-package com.vk.music.view.vkmix.gl
+package com.example.shaders2.gl
 
+import android.content.res.AssetManager
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.os.SystemClock
+import android.util.Log
 import android.util.Size
-import com.vk.music.view.vkmix.gl.textures.GLTextureOutput
-import com.vk.music.view.vkmix.gl.textures.GLTextureSource
+import androidx.compose.ui.graphics.Color
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class GLRenderer : GLSurfaceView.Renderer {
+class GLRenderer(
+    private val assets: AssetManager,
+    private val pathToFrag: String,
+) : GLSurfaceView.Renderer {
 
-    @Volatile
     private var viewportSize = Size(0,0)
 
-    private var sourceFactories: List<GLTextureSource.Factory>? = null
-    private var outputFactory: GLTextureOutput.Factory? = null
-    private var mainPipeline: GLPipeline? = null
+    private var positionAttribute: Int = 0
+    private var resolutionUniform: Int = 0
+    private var timeUniform: Int = 0
+
+    private val startTimeMs = SystemClock.elapsedRealtime()
+
+    private val quadVertices by lazy {
+        floatArrayOf(
+            -1f, 1f,
+            1f, 1f,
+            -1f, -1f,
+            1f, -1f
+        )
+    }
+    private val bytesPerFloat = 4
+    private val verticesData by lazy {
+        ByteBuffer.allocateDirect(quadVertices.size * bytesPerFloat)
+            .order(ByteOrder.nativeOrder()).asFloatBuffer().also {
+                it.put(quadVertices)
+            }
+    }
+    private val positionComponentCount = 2
+
+    @Volatile
+    private lateinit var shader: GLShaderProgram
+
+    fun setValue(name: String, color: Color) {
+
+    }
 
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
-        GLES20.glClearColor(0f, 0f, 0f, 1.0f)
-        GLES20.glEnable(GLES20.GL_BLEND)
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        GLES20.glClearColor(0f, 0f, 0f, 1f)
+        GLES20.glDisable(GL10.GL_DITHER)
+        GLES20.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST)
+        GLES20.glEnable(GL10.GL_BLEND)
+
+        shader = GLShaderProgram.createShaderProgram(
+            assets,
+            "mandelbrot_gl.vert",
+            "mandelbrot_gl.frag",
+        )
+
+        positionAttribute = GLES20.glGetAttribLocation(shader.programId, "aPosition")
+        resolutionUniform = GLES20.glGetUniformLocation(shader.programId, "iResolution")
+        timeUniform = GLES20.glGetUniformLocation(shader.programId, "iTime")
+
+        verticesData.position(0)
+        GLES20.glVertexAttribPointer(
+            positionAttribute,
+            positionComponentCount,
+            GLES20.GL_FLOAT,
+            false,
+            0,
+            verticesData
+        )
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        GLES20.glViewport(0, 0, width, height)
+
         viewportSize = Size(width, height)
-        mainPipeline?.onViewportSizeChanged(viewportSize)
-        createMainPipelineIfNeeded()
     }
 
     override fun onDrawFrame(p0: GL10?) {
-        if (viewportSize.width == 0 || viewportSize.height == 0) {
-            return
-        }
+        val start = SystemClock.elapsedRealtime()
 
-        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT or GLES20.GL_COLOR_BUFFER_BIT)
+        GLES20.glDisable(GL10.GL_DITHER)
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
-        createMainPipelineIfNeeded()
+        GLES20.glUseProgram(shader.programId)
 
-        mainPipeline?.draw()
-    }
+        GLES20.glUniform2f(resolutionUniform, viewportSize.width.toFloat(), viewportSize.height.toFloat())
 
-    internal fun setPipelineQueue(sourceFactories: List<GLTextureSource.Factory>) {
-        this.sourceFactories = sourceFactories
-        sourceFactories.map { it.create(viewportSize) }
-    }
+        val timeDelta = (SystemClock.elapsedRealtime() - startTimeMs) / 1000.0f
+        GLES20.glUniform1f(timeUniform, timeDelta)
 
-    internal fun setOutput(outputFactory: GLTextureOutput.Factory) {
-        this.outputFactory = outputFactory
-    }
+//        Log.i("GL", "draw $timeDelta ${Thread.currentThread()}")
 
-    fun invalidate() {
-        mainPipeline?.invalidate()
-    }
+        GLES20.glEnableVertexAttribArray(positionAttribute)
+        GLES20.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4)
+        GLES20.glDisableVertexAttribArray(positionAttribute)
 
-    private fun createMainPipelineIfNeeded() {
-        if (mainPipeline == null) {
-            sourceFactories?.let {
-                mainPipeline = GLPipeline(
-                    sourcesQueue = it.map {
-                        it.create(viewportSize)
-                    },
-                    output = outputFactory!!.create(),
-                    viewportSize = viewportSize
-                )
-            }
-        }
+        Log.i("OpenGL", "Draw time ${SystemClock.elapsedRealtime() - start} ms")
     }
 }
