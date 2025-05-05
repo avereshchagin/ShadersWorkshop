@@ -45,30 +45,6 @@ fun OpenGL() {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            val renderer = remember {
-                SpotRenderer()
-            }
-
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                factory = { context ->
-                    GLSurfaceView(context).apply {
-                        setEGLContextClientVersion(2)
-                        setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                        preserveEGLContextOnPause = true
-
-                        setRenderer(renderer)
-                        renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
-
-                        keepScreenOn = true
-                    }
-                },
-                update = {
-                },
-            )
-
             AndroidView(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,42 +64,6 @@ fun OpenGL() {
                 update = {
                 },
             )
-
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                factory = { context ->
-                    GLSurfaceView(context).apply {
-                        setEGLContextClientVersion(2)
-                        setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                        preserveEGLContextOnPause = true
-
-                        setRenderer(renderer)
-                        renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
-
-                        keepScreenOn = true
-                    }
-                },
-                update = {
-                },
-            )
-
-            val context = LocalContext.current
-            val thermalService = remember {
-                ThermalService(context)
-            }
-
-            var temp by remember {
-                mutableIntStateOf(0)
-            }
-
-            LaunchedEffect(Unit) {
-                while (true) {
-                    temp = thermalService.getCurrent()
-                    delay(1000)
-                }
-            }
         }
     }
 }
