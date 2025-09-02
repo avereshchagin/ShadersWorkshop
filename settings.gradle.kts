@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Shaders2"
+rootProject.name = "ShadersWorkshop"
 include(":app")
-include(":vulkan-view")
+//include(":vulkan-view")

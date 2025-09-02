@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.avereshchagin.shaders.R
-import io.github.avereshchagin.shaders.agsl.SpotCanvas
+import io.github.avereshchagin.shaders.agsl.Task3Canvas
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +33,7 @@ fun AGSL() {
                 .padding(innerPadding)
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                SpotCanvas()
+                Task3Canvas()
             } else {
                 Text(stringResource(R.string.agsl_not_supported))
             }

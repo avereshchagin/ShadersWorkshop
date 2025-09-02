@@ -31,44 +31,6 @@ import androidx.compose.ui.unit.dp
 import org.intellij.lang.annotations.Language
 
 @Language("AGSL")
-const val Source = """
-    uniform shader texture;
-    
-    uniform float2 iResolution;
-    uniform float stripesCount;
-    
-    float GLASS_REFRACTION = 0.125;
-    
-    float2 glass(float2 uv) {
-        float xShift = fract((uv.x - 0.5) * stripesCount + 0.5) - 0.5;
-        uv.x += xShift * GLASS_REFRACTION;
-        return uv;
-    }
-
-    half4 main(float2 cord) {
-        float2 uv = cord / iResolution.xy;
-        uv = glass(uv);
-        half4 color = texture.eval(uv * iResolution.xy);
-        return color;
-    }
-"""
-
-@Language("AGSL")
-const val Source2 = """
-    uniform shader texture;
-    
-    uniform float2 iResolution;
-    uniform float iTime;
-    
-    half4 main(float2 cord) {
-        float2 uv = cord / iResolution.xy;
-        uv.y = uv.y + cos(uv.x * 3.14 * 4.0) * iTime;
-        half4 color = texture.eval(uv * iResolution.xy);
-        return color;
-    }
-"""
-
-@Language("AGSL")
 const val LensDistortion = """
     uniform shader texture;
     
@@ -111,7 +73,6 @@ private fun ShaderContainer(
         modifier = modifier
             .graphicsLayer {
                 runtimeShader.setFloatUniform("iResolution", size.width, size.height)
-//                runtimeShader.setFloatUniform("stripesCount", stripes.value)
                 runtimeShader.setFloatUniform("iTime", stripes.value)
                 renderEffect = RenderEffect
                     .createRuntimeShaderEffect(
@@ -165,7 +126,6 @@ fun RenderEffectScreen() {
                         Button(
                             modifier = Modifier.weight(1f),
                             onClick = {
-//                                stripes.targetState = 0.03f
                             }
                         ) {
                             Text("OK")
@@ -174,7 +134,6 @@ fun RenderEffectScreen() {
                         Button(
                             modifier = Modifier.weight(1f),
                             onClick = {
-//                                stripes.targetState = 0f
                             }
                         ) {
                             Text("Cancel")

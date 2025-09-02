@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.github.avereshchagin.shaders.R
-import io.github.avereshchagin.shaders.gl.SpotRenderer
+import io.github.avereshchagin.shaders.gl.Task2Renderer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +38,7 @@ fun OpenGL() {
                 .padding(innerPadding)
         ) {
             val renderer = remember {
-                SpotRenderer()
+                Task2Renderer()
             }
 
             AndroidView(
