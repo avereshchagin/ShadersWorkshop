@@ -32,10 +32,10 @@ class MandelbrotRenderer : AbstractShaderGLRenderer() {
         void main() {
         
             // infinite
-//            vec2 p = vec2(-.745,.186) + 3.*(gl_FragCoord.xy/iResolution.y-.5)*pow(.01,1.+cos(.2*iTime));
+            vec2 p = vec2(-.745,.186) + 3.*(gl_FragCoord.xy/iResolution.y-.5)*pow(.01,1.+cos(.2*iTime));
             
             // manual
-            vec2 p = 3.0 * ((gl_FragCoord.xy - 0.5 * iResolution.xy - iCenter * iResolution.xy) / iResolution.y) * iScale;
+//            vec2 p = 3.0 * ((gl_FragCoord.xy - 0.5 * iResolution.xy - iCenter * iResolution.xy) / iResolution.y) * iScale;
 
             float n = 0.0;
             vec2 z = vec2(0.0);
