@@ -19,6 +19,8 @@ class VulkanJniBridge {
 
     external fun setBgColor(r: Float, g: Float, b: Float)
 
+    external fun setTime(time: Float)
+
     companion object {
         init {
             System.loadLibrary("vulkan_view")

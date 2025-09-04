@@ -9,6 +9,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -33,6 +39,18 @@ fun Vulkan() {
         val color = Color.Red
         val bgColor = Color.Black
 
+        var time by remember {
+            mutableFloatStateOf(0f)
+        }
+
+        LaunchedEffect(Unit) {
+            while (true) {
+                withFrameMillis {
+                    time = it / 1000f
+                }
+            }
+        }
+
         AndroidView(
             modifier = Modifier
                 .padding(innerPadding)
@@ -44,6 +62,7 @@ fun Vulkan() {
             update = {
                 it.setColor(color.red, color.green, color.blue)
                 it.setBgColor(bgColor.red, bgColor.green, bgColor.blue)
+                it.setTime(time)
                 it.redraw()
             }
         )

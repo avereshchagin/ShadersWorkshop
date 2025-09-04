@@ -57,7 +57,7 @@ struct UniformBufferObject {
   std::array<float, 4> color;
   std::array<float, 4> bgColor;
   alignas(16) std::array<float, 2> size;
-  alignas(16) float a;
+  alignas(16) float time;
 };
 
 struct QueueFamilyIndices {
@@ -171,6 +171,7 @@ class VulkanApp {
   void resize(uint32_t width, uint32_t height);
   void setColor(float r, float g, float b);
   void setBgColor(float r, float g, float b);
+  void setTime(float time);
   bool initialized = false;
 
  private:
@@ -270,4 +271,5 @@ class VulkanApp {
 
   std::array<float, 4> color = {1.f, 0.f, 0.f, 1.f};
   std::array<float, 4> bgColor = {0.f, 0.f, 0.f, 0.f};
+  float time = 0;
 };

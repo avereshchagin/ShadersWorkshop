@@ -70,4 +70,8 @@ open class VulkanSurfaceView @JvmOverloads constructor(
     fun setBgColor(red: Float, green: Float, blue: Float) {
         bridge.setBgColor(red, green, blue)
     }
+
+    fun setTime(time: Float) {
+        bridge.setTime(time)
+    }
 }

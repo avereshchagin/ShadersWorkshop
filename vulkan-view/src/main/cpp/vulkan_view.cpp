@@ -75,4 +75,13 @@ Java_io_github_avereshchagin_vulkan_VulkanJniBridge_setBgColor(
 ) {
     app.setBgColor(r, g, b);
 }
+
+JNIEXPORT void JNICALL
+Java_io_github_avereshchagin_vulkan_VulkanJniBridge_setTime(
+        JNIEnv *env,
+        jobject obj,
+        jfloat time
+) {
+    app.setTime(time);
+}
 }

@@ -325,6 +325,7 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     ubo.size = {displaySizeIdentity.width * 1.f, displaySizeIdentity.height * 1.f};
     ubo.color = color;
     ubo.bgColor = bgColor;
+    ubo.time = time;
     void *data;
     vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0,
                 &data);
@@ -1085,4 +1086,8 @@ void VulkanApp::setColor(float r, float g, float b) {
 
 void VulkanApp::setBgColor(float r, float g, float b) {
     bgColor = {r, g, b, 1.0f};
+}
+
+void VulkanApp::setTime(float newTime) {
+    time = newTime;
 }
