@@ -5,6 +5,9 @@ import android.os.SystemClock
 import androidx.compose.ui.geometry.Offset
 import org.intellij.lang.annotations.Language
 
+// 1. divergence
+// 2. precision
+// 3. render mode + manual
 class MandelbrotRenderer : AbstractShaderGLRenderer() {
 
     var scale: Float = 1f
@@ -27,26 +30,15 @@ class MandelbrotRenderer : AbstractShaderGLRenderer() {
         uniform float iScale;
 
         void main() {
-//            vec2 p = vec2(-.745,.186) + 3.*(gl_FragCoord.xy/iResolution.y-.5) * scale;
+        
+            // infinite
 //            vec2 p = vec2(-.745,.186) + 3.*(gl_FragCoord.xy/iResolution.y-.5)*pow(.01,1.+cos(.2*iTime));
-
+            
+            // manual
             vec2 p = 3.0 * ((gl_FragCoord.xy - 0.5 * iResolution.xy - iCenter * iResolution.xy) / iResolution.y) * iScale;
-
-//            vec2 uv = (gl_FragCoord.xy) / iResolution.y - 0.5;
-//            vec2 origin = vec2(0.5) + iCenter;
-//            vec2 p = 3.0 * iScale * (uv - origin) + origin;
 
             float n = 0.0;
             vec2 z = vec2(0.0);
-            
-//            if (gl_FragCoord.x < 1.0 && gl_FragCoord.y < 1.0) {
-//                for (; n < 128.0; n++) {
-//                    z = vec2( z.x*z.x - z.y*z.y, 2.*z.x*z.y ) + p;
-//                }
-//            }
-            
-            n = 0.0;
-            z = vec2(0.0);
             
             if (mod(gl_FragCoord.x, 2.) < 1.) {
                 for (; n < 128.0 && dot(z,z) < 1e4; n++) {
