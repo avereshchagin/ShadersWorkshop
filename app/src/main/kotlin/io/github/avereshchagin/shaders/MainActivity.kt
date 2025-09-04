@@ -32,6 +32,7 @@ import io.github.avereshchagin.shaders.screens.AGSL
 import io.github.avereshchagin.shaders.screens.Mandelbrot
 import io.github.avereshchagin.shaders.screens.OpenGL
 import io.github.avereshchagin.shaders.screens.RenderEffectScreen
+import io.github.avereshchagin.shaders.screens.Task3Screen
 import io.github.avereshchagin.shaders.ui.theme.Shaders2Theme
 
 private enum class NavRoute(val route: String, @StringRes val title: Int) {
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(NavRoute.OpenGL.route) { OpenGL() }
                     composable(NavRoute.AGSL.route) { AGSL() }
-                    composable(NavRoute.RenderEffect.route) { RenderEffectScreen() }
+                    composable(NavRoute.RenderEffect.route) { Task3Screen() }
                     composable(NavRoute.Mandelbrot.route) { Mandelbrot() }
                 }
             }
