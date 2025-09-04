@@ -43,8 +43,8 @@ private enum class NavRoute(val route: String, @StringRes val title: Int) {
     Mandelbrot("mandelbrot", R.string.nav_mandelbrot),
 //    CPU("CPU", R.string.nav_cpu),
 //    AllInOne("all-in-one", R.string.nav_allinone),
-    Capabilities("capabilities", R.string.nav_capabilities),
-    Vulkan("vulkan", R.string.nav_vulkan),
+//    Capabilities("capabilities", R.string.nav_capabilities),
+//    Vulkan("vulkan", R.string.nav_vulkan),
 }
 
 class MainActivity : ComponentActivity() {
@@ -69,10 +69,10 @@ class MainActivity : ComponentActivity() {
                     composable(NavRoute.AGSL.route) { AGSL() }
                     composable(NavRoute.RenderEffect.route) { RenderEffectScreen() }
                     composable(NavRoute.Mandelbrot.route) { Mandelbrot() }
-                    composable(NavRoute.Capabilities.route) { Capabilities() }
+//                    composable(NavRoute.Capabilities.route) { Capabilities() }
 //                    composable(NavRoute.CPU.route) { CPUGenerated() }
 //                    composable(NavRoute.AllInOne.route) { AllInOne() }
-                    composable(NavRoute.Vulkan.route) { Vulkan() }
+//                    composable(NavRoute.Vulkan.route) { Vulkan() }
                 }
             }
         }
